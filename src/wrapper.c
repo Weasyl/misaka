@@ -97,14 +97,23 @@ rndr_hrule(struct buf *ob, void *opaque)
 
 
 static void
-rndr_list(struct buf *ob, const struct buf *text, int flags, void *opaque)
+rndr_list(struct buf *ob, const struct buf *text, int flags, char *ol_prefix, void *opaque)
 {
     PyObject *is_ordered = Py_False;
+    PyObject *prefix;
+
     if (flags & MKD_LIST_ORDERED) {
         is_ordered = Py_True;
     }
 
-    PROCESS_BLOCK("list", PY_STR(text), is_ordered, NULL);
+    if (ol_prefix) {
+        prefix = PyUnicode_FromString(ol_prefix);
+        free(ol_prefix);
+    } else {
+        prefix = Py_None;
+    }
+
+    PROCESS_BLOCK("list", PY_STR(text), is_ordered, prefix, NULL);
 }
 
 

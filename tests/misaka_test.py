@@ -271,6 +271,20 @@ This is some awesome code
         text = '#123 a header yes\n'
         ok(self.render_with(text, extensions=EXT_SPACE_HEADERS)).not_contains('<h1>')
 
+    def test_list_custom_start(self):
+        class ListCustomStartRenderer(HtmlRenderer):
+            def list(self, text, ordered, prefix):
+                if prefix:
+                    return '<ol start="{start}">\n{text}</ol>\n'.format(
+                        start=prefix,
+                        text=text)
+
+                return super(ListCustomStartRenderer, self).list(text, ordered, prefix)
+
+        text = '5. five\n6. six\n7. seven'
+        rendered = Markdown(ListCustomStartRenderer()).render(text)
+        ok(rendered).diff('<ol start="5">\n<li>five</li>\n<li>six</li>\n<li>seven</li>\n</ol>\n')
+
 
 class MarkdownConformanceTest_10(TestCase):
     name = 'Markdown Conformance 1.0'

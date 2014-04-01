@@ -261,8 +261,9 @@ rndr_link(struct buf *ob, const struct buf *link, const struct buf *title, const
 }
 
 static void
-rndr_list(struct buf *ob, const struct buf *text, int flags, void *opaque)
+rndr_list(struct buf *ob, const struct buf *text, int flags, char *ol_prefix, void *opaque)
 {
+	if (ol_prefix) free(ol_prefix);
 	if (ob->size) bufputc(ob, '\n');
 	bufput(ob, flags & MKD_LIST_ORDERED ? "<ol>\n" : "<ul>\n", 5);
 	if (text) bufput(ob, text->data, text->size);

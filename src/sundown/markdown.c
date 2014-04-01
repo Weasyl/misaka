@@ -1761,14 +1761,32 @@ parse_listitem(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t s
 }
 
 
+static size_t
+parse_ordered_list_initial_prefix(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size)
+{
+	size_t beg = prefix_oli(data, size);
+
+	return beg ? beg - 2 : 0;
+}
+
+
 /* parse_list • parsing ordered or unordered list block */
 static size_t
 parse_list(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size, int flags)
 {
 	struct buf *work = 0;
 	size_t i = 0, j;
+	size_t ol_prefix_size;
+	char *ol_prefix = NULL;
 
 	work = rndr_newbuf(rndr, BUFFER_BLOCK);
+
+	ol_prefix_size = parse_ordered_list_initial_prefix(work, rndr, data + i, size - i);
+
+	if (ol_prefix_size && (ol_prefix = malloc(ol_prefix_size + 1))) {
+		strncpy(ol_prefix, (char *)data, ol_prefix_size + 1);
+		ol_prefix[ol_prefix_size] = '\0';
+	}
 
 	while (i < size) {
 		j = parse_listitem(work, rndr, data + i, size - i, &flags);
@@ -1779,7 +1797,7 @@ parse_list(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size,
 	}
 
 	if (rndr->cb.list)
-		rndr->cb.list(ob, work, flags, rndr->opaque);
+		rndr->cb.list(ob, work, flags, ol_prefix, rndr->opaque);
 	rndr_popbuf(rndr, BUFFER_BLOCK);
 	return i;
 }
