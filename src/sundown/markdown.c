@@ -400,13 +400,13 @@ find_emph_char(uint8_t *data, size_t size, uint8_t c)
 		if (i == size)
 			return 0;
 
-		if (data[i] == c)
-			return i;
-
 		/* not counting escaped chars */
 		if (i && data[i - 1] == '\\') {
 			i++; continue;
 		}
+
+		if (data[i] == c)
+			return i;
 
 		if (data[i] == '`') {
 			size_t span_nb = 0, bt;
@@ -483,7 +483,7 @@ find_emph_char(uint8_t *data, size_t size, uint8_t c)
 static size_t
 parse_emph1(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size, uint8_t c)
 {
-	size_t i = 0, len;
+	size_t i = 0, last_match = -1, len;
 	struct buf *work = 0;
 	int r;
 
@@ -498,7 +498,12 @@ parse_emph1(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size
 		i += len;
 		if (i >= size) return 0;
 
-		if (data[i] == c && !_isspace(data[i - 1]) && data[i - 1] != c) {
+		if (last_match == i - 1)
+			continue;
+
+		last_match = i;
+
+		if (data[i] == c && !_isspace(data[i - 1])) {
 			if (i + 1 < size && data[i + 1] == c)
 				continue;
 

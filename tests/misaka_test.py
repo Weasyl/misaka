@@ -160,6 +160,9 @@ class MarkdownParserTest(TestCase):
         markdown = self.r('*foo **bar** baz*')
         ok(markdown).diff('<p><em>foo <strong>bar</strong> baz</em></p>\n')
 
+        markdown = self.r(r'*foo\**')
+        ok(markdown).diff('<p><em>foo*</em></p>\n')
+
     def test_urls_not_doubly_escaped(self):
         markdown = self.r('[Page 2](/search?query=Markdown+Test&page=2)')
         ok(markdown).diff('<p><a href="/search?query=Markdown+Test&amp;page=2">Page 2</a></p>\n')
