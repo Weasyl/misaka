@@ -163,6 +163,13 @@ class MarkdownParserTest(TestCase):
         markdown = self.r(r'*foo\**')
         ok(markdown).diff('<p><em>foo*</em></p>\n')
 
+    def test_punctuation_before_emphasis(self):
+        markdown = self.render_with('%*test*', extensions=EXT_NO_INTRA_EMPHASIS)
+        ok(markdown).diff('<p>%<em>test</em></p>\n')
+
+        markdown = self.render_with('~**test**', extensions=EXT_NO_INTRA_EMPHASIS)
+        ok(markdown).diff('<p>~<strong>test</strong></p>\n')
+
     def test_urls_not_doubly_escaped(self):
         markdown = self.r('[Page 2](/search?query=Markdown+Test&page=2)')
         ok(markdown).diff('<p><a href="/search?query=Markdown+Test&amp;page=2">Page 2</a></p>\n')
