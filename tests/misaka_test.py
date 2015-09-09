@@ -13,7 +13,7 @@ import misaka
 from misaka import Markdown, BaseRenderer, HtmlRenderer, SmartyPants, \
     EXT_NO_INTRA_EMPHASIS, EXT_TABLES, EXT_FENCED_CODE, EXT_AUTOLINK, \
     EXT_STRIKETHROUGH, EXT_LAX_SPACING, EXT_SPACE_HEADERS, \
-    EXT_SUPERSCRIPT, \
+    EXT_SUPERSCRIPT, EXT_NO_INDENTED_CODE_BLOCKS, \
     HTML_SKIP_HTML, HTML_SKIP_STYLE, HTML_SKIP_IMAGES, HTML_SKIP_LINKS, \
     HTML_EXPAND_TABS, HTML_SAFELINK, HTML_TOC, HTML_HARD_WRAP, \
     HTML_USE_XHTML, HTML_ESCAPE, \
@@ -271,6 +271,11 @@ This is some awesome code
 
         ok(self.render_with(text)).not_contains('<pre><code>')
         ok(self.render_with(text, extensions=EXT_FENCED_CODE | EXT_LAX_SPACING)).contains('<pre><code>')
+
+    def test_fenced_code_blocks_only(self):
+        text = '```\ncode\n```\n\ntext\n\n    not code'
+
+        ok(self.render_with(text, extensions=EXT_FENCED_CODE | EXT_NO_INDENTED_CODE_BLOCKS)).diff('<pre><code>code\n</code></pre>\n\n<p>text</p>\n\n<p>not code</p>\n')
 
     def test_linkable_headers(self):
         markdown = self.r('### Hello [GitHub](http://github.com)')
