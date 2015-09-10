@@ -1785,14 +1785,22 @@ parse_list(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t size,
 	size_t i = 0, j;
 	size_t ol_prefix_size;
 	char *ol_prefix = NULL;
+	unsigned char *prefix_start = data;
 
 	work = rndr_newbuf(rndr, BUFFER_BLOCK);
 
-	ol_prefix_size = parse_ordered_list_initial_prefix(work, rndr, data + i, size - i);
+	ol_prefix_size = parse_ordered_list_initial_prefix(work, rndr, data, size);
 
-	if (ol_prefix_size && (ol_prefix = malloc(ol_prefix_size + 1))) {
-		strncpy(ol_prefix, (char *)data, ol_prefix_size + 1);
-		ol_prefix[ol_prefix_size] = '\0';
+	if (ol_prefix_size) {
+		while (*prefix_start == ' ') {
+			prefix_start++;
+			ol_prefix_size--;
+		}
+
+		if ((ol_prefix = malloc(ol_prefix_size + 1))) {
+			memcpy(ol_prefix, prefix_start, ol_prefix_size);
+			ol_prefix[ol_prefix_size] = '\0';
+		}
 	}
 
 	while (i < size) {

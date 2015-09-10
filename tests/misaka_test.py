@@ -300,7 +300,7 @@ This is some awesome code
 
                 return super(ListCustomStartRenderer, self).list(text, ordered, prefix)
 
-        text = '5. five\n6. six\n7. seven'
+        text = ' 5. five\n 6. six\n 7. seven'
         rendered = Markdown(ListCustomStartRenderer()).render(text)
         ok(rendered).diff('<ol start="5">\n<li>five</li>\n<li>six</li>\n<li>seven</li>\n</ol>\n')
 
