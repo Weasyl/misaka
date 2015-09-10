@@ -42,24 +42,6 @@ class CythonCommand(BaseCommand):
             print('Cython is not installed. Please install Cython first.')
 
 
-class VendorCommand(BaseCommand):
-    description = 'update Sundown files. Use `git submodule init`, '\
-        '`git submodule update` and `git submodule foreach git pull origin master`'\
-        ' to the most recent files'
-
-    def run(self):
-        files = []
-        dest = os.path.join(dirname, 'src/sundown')
-
-        for path in ['vendor/sundown/src/*', 'vendor/sundown/html/*']:
-            files += glob.glob(os.path.join(dirname, path))
-
-        for path in files:
-            if os.path.exists(path):
-                print('copy %s -> %s' % (path, dest))
-                shutil.copy(path, dest)
-
-
 class TestCommand(BaseCommand):
     description = 'run unit tests'
     def run(self):
@@ -79,7 +61,6 @@ setup(
     cmdclass={
         'clean': CleanCommand,
         'compile_cython': CythonCommand,
-        'update_vendor': VendorCommand,
         'test': TestCommand
     },
     ext_modules=[Extension('misaka', [
