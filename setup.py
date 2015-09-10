@@ -68,7 +68,7 @@ class TestCommand(BaseCommand):
 
 setup(
     name='misaka',
-    version='1.0.3+weasyl-4',
+    version='1.0.3+weasyl.5',
     description='The Python binding for Sundown, a markdown parsing library.',
     author='Frank Smit',
     author_email='frank@61924.nl',
