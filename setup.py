@@ -1,90 +1,76 @@
 import os
-import glob
-import shutil
 import os.path
+import shutil
+import subprocess
+import sys
+from setuptools import setup, Command
 
+
+install_requires=['cffi>=1.0.0']
 try:
-    from setuptools import setup, Extension, Command
+    import importlib
 except ImportError:
-    from distutils.core import setup, Extension, Command
-
+    install_requires.append('importlib')
 
 dirname = os.path.dirname(os.path.abspath(__file__))
 
 
-class BaseCommand(Command):
-    user_options = []
+class TestCommand(Command):
+    description = 'run tests'
+    user_options = [
+        ('include=', 'i', 'comma separated list of testcases'),
+        ('exclude=', 'e', 'comma separated list of testcases'),
+        ('benchmark', 'b', 'run bechmarks'),
+        ('list', 'l', 'list all testcases'),
+    ]
+
     def initialize_options(self):
-        pass
+        self.include = ''
+        self.exclude = ''
+        self.benchmark = 0
+        self.list = 0
+
     def finalize_options(self):
         pass
 
-
-class CleanCommand(BaseCommand):
-    description = 'cleanup directories created by packaging and build processes'
     def run(self):
-        for path in ['build', 'dist', 'misaka.egg-info', 'docs/_build']:
-            if os.path.exists(path):
-                path = os.path.join(dirname, path)
-                print('removing %s' % path)
-                shutil.rmtree(path)
-
-
-class CythonCommand(BaseCommand):
-    description = 'compile Cython files(s) into C file(s)'
-    def run(self):
-        try:
-            from Cython.Compiler.Main import compile
-            path = os.path.join(dirname, 'src', 'misaka.pyx')
-            print('compiling %s' % path)
-            compile(path)
-        except ImportError:
-            print('Cython is not installed. Please install Cython first.')
-
-
-class TestCommand(BaseCommand):
-    description = 'run unit tests'
-    def run(self):
-        os.system('python tests/misaka_test.py')
+        self.run_command('develop')
+        errno = subprocess.call([sys.executable, 'tests/run_tests.py'] + sys.argv[2:])
+        sys.exit(errno)
 
 
 setup(
     name='misaka',
-    version='1.0.3+weasyl.6',
-    description='The Python binding for Sundown, a markdown parsing library.',
+    version='2.0.0+weasyl.1',
+    description='A CFFI binding for Hoedown, a markdown parsing library.',
     author='Frank Smit',
     author_email='frank@61924.nl',
-    url='http://misaka.61924.nl/',
+    url='https://github.com/FSX/misaka',
     license='MIT',
     long_description=open(os.path.join(dirname, 'README.rst')).read(),
     scripts=['scripts/misaka'],
+    packages=['misaka'],
     cmdclass={
-        'clean': CleanCommand,
-        'compile_cython': CythonCommand,
         'test': TestCommand
     },
-    ext_modules=[Extension('misaka', [
-        'src/misaka.c',
-        'src/wrapper.c',
-        'src/sundown/stack.c',
-        'src/sundown/buffer.c',
-        'src/sundown/markdown.c',
-        'src/sundown/html.c',
-        'src/sundown/html_smartypants.c',
-        'src/sundown/houdini_href_e.c',
-        'src/sundown/houdini_html_e.c',
-        'src/sundown/autolink.c'
-    ])],
     classifiers = [
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: C',
-        'Programming Language :: Cython',
+        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Text Processing :: Markup',
         'Topic :: Text Processing :: Markup :: HTML',
         'Topic :: Utilities'
-    ]
+    ],
+    setup_requires=['cffi>=1.0.0'],
+    install_requires=install_requires,
+    cffi_modules=['build_ffi.py:ffi'],
 )
