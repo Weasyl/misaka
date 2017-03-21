@@ -5,12 +5,17 @@ Changelog
 
 Date format is year-month-day.
 
-2.0.1 (2015-??-??)
+2.1.0 (2017-01-15)
 ^^^^^^^^^^^^^^^^^^
 
-- Add Python 2.6 support. (`#48`_)
+- Add a new renderer class with XSS protections. By Changaco. (`#60`_)
+- Add Python 2.6 support. By sprin. (`#48`_)
+- Add Termux_ installation instructions to documentation.
+- Update Hoedown source files.
 
+.. _#60: https://github.com/FSX/misaka/pull/60
 .. _#48: https://github.com/FSX/misaka/pull/48
+.. _Termux: https://github.com/termux/termux-packages/issues/218
 
 
 2.0.0 (2015-10-22)

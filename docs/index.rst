@@ -15,12 +15,13 @@ See the :doc:`/changelog` for all changes.
 Installation
 ------------
 
-Misaka has been tested on CPython 2.6, 2.7, 3.2, 3.3, 3.4, 3.5 and PyPy 2.6.
+Misaka has been tested on CPython 2.6, 2.7, 3.2, 3.3, 3.4, 3.5, 3.6 and PyPy 2.6+.
 CFFI 1.0 or newer is required. This means Misaka will not work on PyPy 2.5
 and older versions.
 
 If you're installing from source and are using Debian or a Debian derivative
-(e.g. Ubuntu) make sure ``python-dev`` and ``libffi-dev`` are installed.
+(e.g. Ubuntu) make sure ``build-essential``, ``python-dev`` and ``libffi-dev``
+are installed.
 
 Install with pip::
 
@@ -34,6 +35,14 @@ Or grab the source from Github::
 
 Consult the `CFFI documentation`_ if you experience problems installing CFFI.
 
+Use the following commands to install Misaka in Termux_::
+
+    apt update
+    apt upgrade
+    apt install clang python python-dev libffi libffi-dev
+    pip install misaka
+
+.. _Termux: https://termux.com/
 .. _CFFI documentation: https://cffi.readthedocs.org/en/latest/installation.html
 
 
@@ -214,6 +223,9 @@ Functions
 .. autofunction:: smartypants
 
 
+.. autofunction:: escape_html
+
+
 Classes
 ^^^^^^^
 
@@ -222,6 +234,10 @@ Classes
 
 
 .. autoclass:: HtmlRenderer
+    :members:
+
+
+.. autoclass:: SaferHtmlRenderer
     :members:
 
 
