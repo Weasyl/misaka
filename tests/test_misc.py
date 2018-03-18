@@ -5,6 +5,7 @@ from misaka import (
     HtmlRenderer,
     Markdown,
     extension_map,
+    EXT_AUTOLINK,
     EXT_TABLES,
     EXT_FENCED_CODE,
     EXT_FOOTNOTES,
@@ -63,3 +64,10 @@ class MarkdownParserTest(TestCase):
         text = ' 5. five\n 6. six\n 7. seven'
         rendered = Markdown(ListCustomStartRenderer())(text)
         ok(rendered).diff('<ol start="5">\n<li>five</li>\n<li>six</li>\n<li>seven</li>\n</ol>\n')
+
+    def test_emphasis_in_autolink(self):
+        markdown = self.render_with('https://example.com/_example_', extensions=EXT_AUTOLINK)
+        ok(markdown).diff('<p><a href="https://example.com/_example_">https://example.com/_example_</a></p>\n')
+
+        markdown = self.render_with('_example_@example.com', extensions=EXT_AUTOLINK)
+        ok(markdown).diff('<p><em>example</em>@example.com</p>\n')
