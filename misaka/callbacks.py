@@ -5,9 +5,8 @@ from .constants import *
 from .utils import to_string
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *text, '
-              '     const hoedown_buffer *lang, const hoedown_renderer_data *data)')
-def cb_blockcode(ob, text, lang, data):
+@ffi.def_extern()
+def _misaka_blockcode(ob, text, lang, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     text = to_string(text)
     lang = to_string(lang)
@@ -17,9 +16,8 @@ def cb_blockcode(ob, text, lang, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     const hoedown_renderer_data *data)')
-def cb_blockquote(ob, content, data):
+@ffi.def_extern()
+def _misaka_blockquote(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.blockquote(content)
@@ -27,9 +25,8 @@ def cb_blockquote(ob, content, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     int level, const hoedown_renderer_data *data)')
-def cb_header(ob, content, level, data):
+@ffi.def_extern()
+def _misaka_header(ob, content, level, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     level = int(level)
@@ -38,8 +35,8 @@ def cb_header(ob, content, level, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_renderer_data *data)')
-def cb_hrule(ob, data):
+@ffi.def_extern()
+def _misaka_hrule(ob, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     result = renderer.hrule()
     if result:
@@ -47,9 +44,8 @@ def cb_hrule(ob, data):
 
 
 # flags: LIST_ORDERED, LI_BLOCK.
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     hoedown_list_flags flags, const uint8_t* ol_prefix, const hoedown_renderer_data *data)')
-def cb_list(ob, content, flags, ol_prefix_bytes, data):
+@ffi.def_extern()
+def _misaka_list(ob, content, flags, ol_prefix_bytes, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     flags = int(flags)
@@ -64,9 +60,8 @@ def cb_list(ob, content, flags, ol_prefix_bytes, data):
 
 
 # flags: LIST_ORDERED, LI_BLOCK.
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     hoedown_list_flags flags, const hoedown_renderer_data *data)')
-def cb_listitem(ob, content, flags, data):
+@ffi.def_extern()
+def _misaka_listitem(ob, content, flags, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     flags = int(flags)
@@ -77,9 +72,8 @@ def cb_listitem(ob, content, flags, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     const hoedown_renderer_data *data)')
-def cb_paragraph(ob, content, data):
+@ffi.def_extern()
+def _misaka_paragraph(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.paragraph(content)
@@ -87,9 +81,8 @@ def cb_paragraph(ob, content, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     const hoedown_renderer_data *data)')
-def cb_table(ob, content, data):
+@ffi.def_extern()
+def _misaka_table(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.table(content)
@@ -97,9 +90,8 @@ def cb_table(ob, content, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     const hoedown_renderer_data *data)')
-def cb_table_header(ob, content, data):
+@ffi.def_extern()
+def _misaka_table_header(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.table_header(content)
@@ -107,9 +99,8 @@ def cb_table_header(ob, content, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     const hoedown_renderer_data *data)')
-def cb_table_body(ob, content, data):
+@ffi.def_extern()
+def _misaka_table_body(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.table_body(content)
@@ -117,9 +108,8 @@ def cb_table_body(ob, content, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     const hoedown_renderer_data *data)')
-def cb_table_row(ob, content, data):
+@ffi.def_extern()
+def _misaka_table_row(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.table_row(content)
@@ -129,9 +119,8 @@ def cb_table_row(ob, content, data):
 
 # flags: TABLE_ALIGNMASK, TABLE_ALIGN_LEFT, TABLE_ALIGN_RIGHT,
 #        TABLE_ALIGN_CENTER, TABLE_HEADER
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     hoedown_table_flags flags, const hoedown_renderer_data *data)')
-def cb_table_cell(ob, content, flags, data):
+@ffi.def_extern()
+def _misaka_table_cell(ob, content, flags, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     flags = int(flags)
@@ -152,9 +141,8 @@ def cb_table_cell(ob, content, flags, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     const hoedown_renderer_data *data)')
-def cb_footnotes(ob, content, data):
+@ffi.def_extern()
+def _misaka_footnotes(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.footnotes(content)
@@ -162,9 +150,8 @@ def cb_footnotes(ob, content, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '     unsigned int num, const hoedown_renderer_data *data)')
-def cb_footnote_def(ob, content, num, data):
+@ffi.def_extern()
+def _misaka_footnote_def(ob, content, num, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     num = int(num)
@@ -173,21 +160,19 @@ def cb_footnote_def(ob, content, num, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *text, '
-              '     const hoedown_renderer_data *data)')
-def cb_blockhtml(ob, text, data):
+@ffi.def_extern()
+def _misaka_blockhtml(ob, text, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
-    text = ffi.string(text.data, text.size).decode('utf-8')
+    text = to_string(text)
     result = renderer.blockhtml(text)
     if result:
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *link, '
-              '    hoedown_autolink_type type, const hoedown_renderer_data *data)')
-def cb_autolink(ob, link, type, data):
+@ffi.def_extern()
+def _misaka_autolink(ob, link, type, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
-    link = ffi.string(link.data, link.size).decode('utf-8')
+    link = to_string(link)
     is_email = int(type) & AUTOLINK_EMAIL != 0
     result = renderer.autolink(link, is_email)
     if result:
@@ -196,11 +181,10 @@ def cb_autolink(ob, link, type, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *text, '
-              '    const hoedown_renderer_data *data)')
-def cb_codespan(ob, text, data):
+@ffi.def_extern()
+def _misaka_codespan(ob, text, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
-    text = ffi.string(text.data, text.size).decode('utf-8')
+    text = to_string(text)
     result = renderer.codespan(text)
     if result:
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
@@ -208,9 +192,8 @@ def cb_codespan(ob, text, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '    const hoedown_renderer_data *data)')
-def cb_double_emphasis(ob, content, data):
+@ffi.def_extern()
+def _misaka_double_emphasis(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.double_emphasis(content)
@@ -220,9 +203,8 @@ def cb_double_emphasis(ob, content, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '    const hoedown_renderer_data *data)')
-def cb_emphasis(ob, content, data):
+@ffi.def_extern()
+def _misaka_emphasis(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.emphasis(content)
@@ -232,9 +214,8 @@ def cb_emphasis(ob, content, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '    const hoedown_renderer_data *data)')
-def cb_underline(ob, content, data):
+@ffi.def_extern()
+def _misaka_underline(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.underline(content)
@@ -244,9 +225,8 @@ def cb_underline(ob, content, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '    const hoedown_renderer_data *data)')
-def cb_highlight(ob, content, data):
+@ffi.def_extern()
+def _misaka_highlight(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.highlight(content)
@@ -256,9 +236,8 @@ def cb_highlight(ob, content, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '    const hoedown_renderer_data *data)')
-def cb_quote(ob, content, data):
+@ffi.def_extern()
+def _misaka_quote(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.quote(content)
@@ -268,10 +247,8 @@ def cb_quote(ob, content, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *link, '
-              '    const hoedown_buffer *title, const hoedown_buffer *alt, '
-              '    const hoedown_renderer_data *data)')
-def cb_image(ob, link, title, alt, data):
+@ffi.def_extern()
+def _misaka_image(ob, link, title, alt, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     link = to_string(link)
     title = to_string(title)
@@ -283,8 +260,8 @@ def cb_image(ob, link, title, alt, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_renderer_data *data)')
-def cb_linebreak(ob, data):
+@ffi.def_extern()
+def _misaka_linebreak(ob, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     result = renderer.linebreak()
     if result:
@@ -293,10 +270,8 @@ def cb_linebreak(ob, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '    const hoedown_buffer *link, const hoedown_buffer *title, '
-              '    const hoedown_renderer_data *data)')
-def cb_link(ob, content, link, title, data):
+@ffi.def_extern()
+def _misaka_link(ob, content, link, title, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     link = to_string(link)
@@ -308,9 +283,8 @@ def cb_link(ob, content, link, title, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '    const hoedown_renderer_data *data)')
-def cb_triple_emphasis(ob, content, data):
+@ffi.def_extern()
+def _misaka_triple_emphasis(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.triple_emphasis(content)
@@ -320,9 +294,8 @@ def cb_triple_emphasis(ob, content, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '    const hoedown_renderer_data *data)')
-def cb_strikethrough(ob, content, data):
+@ffi.def_extern()
+def _misaka_strikethrough(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.strikethrough(content)
@@ -332,9 +305,8 @@ def cb_strikethrough(ob, content, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *content, '
-              '    const hoedown_renderer_data *data)')
-def cb_superscript(ob, content, data):
+@ffi.def_extern()
+def _misaka_superscript(ob, content, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     content = to_string(content)
     result = renderer.superscript(content)
@@ -344,9 +316,8 @@ def cb_superscript(ob, content, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, unsigned int num, '
-              '    const hoedown_renderer_data *data)')
-def cb_footnote_ref(ob, num, data):
+@ffi.def_extern()
+def _misaka_footnote_ref(ob, num, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     num = int(num)
     result = renderer.footnote_ref(num)
@@ -356,9 +327,8 @@ def cb_footnote_ref(ob, num, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *text, '
-              '    int displaymode, const hoedown_renderer_data *data)')
-def cb_math(ob, text, displaymode, data):
+@ffi.def_extern()
+def _misaka_math(ob, text, displaymode, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     text = to_string(text)
     displaymode = int(displaymode)
@@ -369,9 +339,8 @@ def cb_math(ob, text, displaymode, data):
     return 0
 
 
-@ffi.callback('int(hoedown_buffer *ob, const hoedown_buffer *text, '
-              '    const hoedown_renderer_data *data)')
-def cb_raw_html(ob, text, data):
+@ffi.def_extern()
+def _misaka_raw_html(ob, text, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     text = to_string(text)
     result = renderer.raw_html(text)
@@ -381,9 +350,8 @@ def cb_raw_html(ob, text, data):
     return 0
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *text, '
-              '     const hoedown_renderer_data *data)')
-def cb_entity(ob, text, data):
+@ffi.def_extern()
+def _misaka_entity(ob, text, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     text = to_string(text)
     result = renderer.entity(text)
@@ -391,9 +359,8 @@ def cb_entity(ob, text, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, const hoedown_buffer *text, '
-              '     const hoedown_renderer_data *data)')
-def cb_normal_text(ob, text, data):
+@ffi.def_extern()
+def _misaka_normal_text(ob, text, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     text = to_string(text)
     result = renderer.normal_text(text)
@@ -401,8 +368,8 @@ def cb_normal_text(ob, text, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, int inline_render, const hoedown_renderer_data *data)')
-def cb_doc_header(ob, inline_render, data):
+@ffi.def_extern()
+def _misaka_doc_header(ob, inline_render, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     inline_render = int(inline_render)
     result = renderer.doc_header(inline_render)
@@ -410,8 +377,8 @@ def cb_doc_header(ob, inline_render, data):
         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
 
 
-@ffi.callback('void(hoedown_buffer *ob, int inline_render, const hoedown_renderer_data *data)')
-def cb_doc_footer(ob, inline_render, data):
+@ffi.def_extern()
+def _misaka_doc_footer(ob, inline_render, data):
     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
     inline_render = int(inline_render)
     result = renderer.doc_footer(inline_render)
@@ -421,45 +388,45 @@ def cb_doc_footer(ob, inline_render, data):
 
 python_callbacks = {
     # block level callbacks - NULL skips the block
-    'blockcode':    cb_blockcode,
-    'blockquote':   cb_blockquote,
-    'header':       cb_header,
-    'hrule':        cb_hrule,
-    'list':         cb_list,
-    'listitem':     cb_listitem,
-    'paragraph':    cb_paragraph,
-    'table':        cb_table,
-    'table_header': cb_table_header,
-    'table_body':   cb_table_body,
-    'table_row':    cb_table_row,
-    'table_cell':   cb_table_cell,
-    'footnotes':    cb_footnotes,
-    'footnote_def': cb_footnote_def,
-    'blockhtml':    cb_blockhtml,
+    'blockcode':    lib._misaka_blockcode,
+    'blockquote':   lib._misaka_blockquote,
+    'header':       lib._misaka_header,
+    'hrule':        lib._misaka_hrule,
+    'list':         lib._misaka_list,
+    'listitem':     lib._misaka_listitem,
+    'paragraph':    lib._misaka_paragraph,
+    'table':        lib._misaka_table,
+    'table_header': lib._misaka_table_header,
+    'table_body':   lib._misaka_table_body,
+    'table_row':    lib._misaka_table_row,
+    'table_cell':   lib._misaka_table_cell,
+    'footnotes':    lib._misaka_footnotes,
+    'footnote_def': lib._misaka_footnote_def,
+    'blockhtml':    lib._misaka_blockhtml,
 
     # span level callbacks - NULL or return 0 prints the span verbatim
-    'autolink':        cb_autolink,
-    'codespan':        cb_codespan,
-    'double_emphasis': cb_double_emphasis,
-    'emphasis':        cb_emphasis,
-    'underline':       cb_underline,
-    'highlight':       cb_highlight,
-    'quote':           cb_quote,
-    'image':           cb_image,
-    'linebreak':       cb_linebreak,
-    'link':            cb_link,
-    'triple_emphasis': cb_triple_emphasis,
-    'strikethrough':   cb_strikethrough,
-    'superscript':     cb_superscript,
-    'footnote_ref':    cb_footnote_ref,
-    'math':            cb_math,
-    'raw_html':        cb_raw_html,
+    'autolink':        lib._misaka_autolink,
+    'codespan':        lib._misaka_codespan,
+    'double_emphasis': lib._misaka_double_emphasis,
+    'emphasis':        lib._misaka_emphasis,
+    'underline':       lib._misaka_underline,
+    'highlight':       lib._misaka_highlight,
+    'quote':           lib._misaka_quote,
+    'image':           lib._misaka_image,
+    'linebreak':       lib._misaka_linebreak,
+    'link':            lib._misaka_link,
+    'triple_emphasis': lib._misaka_triple_emphasis,
+    'strikethrough':   lib._misaka_strikethrough,
+    'superscript':     lib._misaka_superscript,
+    'footnote_ref':    lib._misaka_footnote_ref,
+    'math':            lib._misaka_math,
+    'raw_html':        lib._misaka_raw_html,
 
     # low level callbacks - NULL copies input directly into the output
-    'entity':      cb_entity,
-    'normal_text': cb_normal_text,
+    'entity':      lib._misaka_entity,
+    'normal_text': lib._misaka_normal_text,
 
     # miscellaneous callbacks
-    'doc_header': cb_doc_header,
-    'doc_footer': cb_doc_footer,
+    'doc_header': lib._misaka_doc_header,
+    'doc_footer': lib._misaka_doc_footer,
 }

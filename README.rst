@@ -17,11 +17,27 @@ Documentation can be found at: http://misaka.61924.nl/
 .. _Hoedown: https://github.com/hoedown/hoedown
 
 
+Professional support
+====================
+
+Professional support for Misaka is available as part of the `Tidelift
+Subscription`_. Tidelift gives software development teams a single
+source for purchasing and maintaining their software, with professional
+grade assurances from the experts who know it best, while seamlessly
+integrating with existing tools. By subscribing you will help support
+Misaka future development. Alternatively consider making a small
+`donation`_.
+
+.. _Tidelift Subscription: https://tidelift.com/subscription/pkg/pypi-misaka?utm_source=pypi-misaka&utm_medium=referral&utm_campaign=readme
+.. _`donation`: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=FB6NWEJC87BJY&currency_code=EUR&source=url
+
+
 Installation
 ------------
 
-Misaka has been tested on CPython 2.6, 2.7, 3.2, 3.3, 3.4, 3.5 and PyPy 2.6. It needs
-CFFI 1.0 or newer, because of this it will not work on PyPy 2.5 and older.
+Misaka has been tested on CPython 2.7, 3.5, 3.6, 3.7, 3.8 and PyPy 2.7
+and 3.5. It needs CFFI 1.12.0 or newer, because of this it will not work
+on PyPy 2.5 and older.
 
 With pip::
 
@@ -52,3 +68,11 @@ Or:
     md = Markdown(rndr)
 
     print(md('some text'))
+
+
+Security contact information
+----------------------------
+
+To report a security vulnerability, please use the
+`Tidelift security contact <https://tidelift.com/security>`_.
+Tidelift will coordinate the fix and disclosure.
