@@ -37,7 +37,7 @@ class CythonCommand(BaseCommand):
             from Cython.Compiler.Main import compile
             path = os.path.join(dirname, 'src', 'misaka.pyx')
             print('compiling %s' % path)
-            compile(path)
+            compile(path, language_level='2')
         except ImportError:
             print('Cython is not installed. Please install Cython first.')
 
