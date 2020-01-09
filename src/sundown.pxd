@@ -77,9 +77,6 @@ cdef extern from 'sundown/markdown.h':
         void (*doc_header)(buf *ob, void *opaque)
         void (*doc_footer)(buf *ob, void *opaque)
 
-    enum mkd_autolink:
-        pass
-
     struct sd_markdown:
         pass
 
